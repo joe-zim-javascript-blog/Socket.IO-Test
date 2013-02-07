@@ -1,0 +1,24 @@
+{
+  "name": "socket.io-test",
+  "version": "0.0.0",
+  "description": "Testing the speed of Socket.IO connections",
+  "dependencies": {
+    "socket.io": "~0.9.13",
+    "polpetta": "~0.3.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joe-zim-javascript-blog/Socket-IO-Test"
+  },
+  "keywords": [
+    "socket.io",
+    "performance"
+  ],
+  "author": "Joe Zimmerman",
+  "license": "GPL"
+}

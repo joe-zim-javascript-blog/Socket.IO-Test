@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Socket.IO Test</title>
+</head>
+<body>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="/socket.io.js"></script>
+	<script type="text/javascript">
+
+
+	var options = ['websocket', 'flashsocket', 'xhr-polling', 'jsonp-polling'];
+	var count = options.length - 1;
+	var total = 0;
+
+	function runtest(count) {
+		var deferred = new $.Deferred();
+		var promise = deferred.promise();
+		var transport = options[count];
+		var start, end, socket;
+
+		$.when(promise).then(function(){
+			if ( count > 0 ) {
+				runtest(count - 1);
+			}
+			else {
+				console.log('FINISHED WITH TOTAL TIME: ' + total);
+			}
+		});
+
+		start = new Date();
+		socket = io.connect(":8080", {
+			'force new connection': true,
+			'auto connect': false,
+			'transports': [transport]/**/
+		});
+
+		socket.on('connect', function() {
+			socket.disconnect();
+		});
+
+		socket.on('disconnect', function() {
+			end = new Date();
+			var time = end - start;
+			total += time;
+
+			console.log('Transport: '+ count +"-"+ transport +"; Time: "+ time +"ms");
+			deferred.resolve();
+		});
+
+		socket.socket.connect();
+
+	}
+
+	runtest(count);
+
+
+	</script>
+</body>
+</html>
