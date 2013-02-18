@@ -2,19 +2,19 @@ var io = require('socket.io').listen(8080);
 
 io.sockets.on('connection', function(socket) {
 
-	socket.on('get_server_list', function(){
-		socket.emit('server_list', {});
+	socket.on('1', function(){
+		socket.emit('2', 1);
 	});
 
-	socket.on('get_status', function(){
-		socket.emit('status', {});
+	socket.on('3', function(){
+		socket.emit('4', '1');
 	});
 
-	socket.on('start_server', function(name) {
-		socket.emit('fail', 'start_server');
+	socket.on('5', function(name) {
+		socket.emit('6', {one:1});
 	});
 
-	socket.on('command', function(cmd) {
-		io.sockets.emit('console', "Player Command: " + cmd);
+	socket.on('7', function(cmd) {
+		socket.emit('8', {one:1, two:'2'});
 	});
 });
