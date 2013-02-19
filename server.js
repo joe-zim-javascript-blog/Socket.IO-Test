@@ -10,11 +10,11 @@ io.sockets.on('connection', function(socket) {
 		socket.emit('4', '1');
 	});
 
-	socket.on('5', function(name) {
+	socket.on('5', function() {
 		socket.emit('6', {one:1});
 	});
 
-	socket.on('7', function(cmd) {
+	socket.on('7', function() {
 		socket.emit('8', {one:1, two:'2'});
 	});
 });
