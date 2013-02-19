@@ -62,32 +62,26 @@ function runMessageTest() {
 	socket.on('connect', function() {
 		start = new Date();
 		socket.emit('1', 1);
-		console.log('connected. sent 1');
 	});
 
 	socket.on('2', function() {
 		socket.emit('3', "1");
-		console.log('received 2. sent 3');
 	});
 
 	socket.on('4', function() {
 		socket.emit('5', {one:1});
-		console.log('received 4. sent 5');
 	});
 
 	socket.on('6', function() {
 		socket.emit('7', {one:1, two:'2'});
-		console.log('received 6. sent 7');
 	});
 
 	socket.on('8', function() {
 		end = new Date();
 		socket.disconnect();
-		console.log('received 8. disconnecting');
 	});
 
 	socket.on('disconnect', function() {
-		console.log('disconnected 4. outputting');
 		var time = end - start;
 		output.append("Time to finish all messages: "+ time +"ms\n");
 	});
