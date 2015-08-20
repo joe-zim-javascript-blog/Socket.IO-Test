@@ -1,7 +1,15 @@
-var io = require('socket.io').listen(8080);
+var express = require('express');
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-io.sockets.on('connection', function(socket) {
+app.use(express.static('.'));
 
+http.listen(80, function(){
+  console.log('listening on *:80');
+});
+
+io.on('connection', function(socket) {
 	socket.on('1', function(){
 		socket.emit('2', 1);
 	});

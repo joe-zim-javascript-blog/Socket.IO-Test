@@ -1,90 +1,74 @@
-var options = ['websocket', 'flashsocket', 'xhr-polling', 'jsonp-polling'];
 var output = $('#output');
-var total;
 
-$('#connect-test').on('click', function(){
-	total = 0;
+$('#connect-test').on('click', function () {
 	output.empty();
-	runConnectionTest(options.length-1);
+	runConnectionTest();
 });
 
-$('#message-test').on('click', function(){
+$('#message-test').on('click', function () {
 	output.empty();
 	runMessageTest();
 });
 
-function runConnectionTest(count) {
-	var deferred = new $.Deferred();
-	var promise = deferred.promise();
-	var transport = options[count];
-	var start, end, socket;
-
-	$.when(promise).then(function(){
-		if ( count > 0 ) {
-			runConnectionTest(count - 1);
-		}
-		else {
-			output.append('FINISHED WITH TOTAL TIME: ' + total + 'ms\n');
-		}
-	});
+function runConnectionTest() {
+	var start, midpoint, end, socket;
 
 	start = new Date();
-	socket = io.connect(":8080", {
-		'force new connection': true,
-		'auto connect': false,
-		'transports': [transport]/**/
-	});
-
-	socket.on('connect', function() {
-		socket.disconnect();
-	});
-
-	socket.on('disconnect', function() {
-		end = new Date();
-		var time = end - start;
-		total += time;
-
-		output.append('Transport: '+ transport +"; Time: "+ time +"ms\n");
-		deferred.resolve();
-	});
-
-	socket.socket.connect();
-
-}
-
-function runMessageTest() {
-	var start, end;
-	var socket = io.connect(":8080", {
+	socket = io.connect(":80", {
 		'force new connection': true,
 		'auto connect': false
 	});
 
-	socket.on('connect', function() {
+	socket.on('connect', function () {
+		midpoint = new Date();
+		output.append("Connected after " + (midpoint - start) + "ms\n" );
+		socket.disconnect();
+	});
+
+	socket.on('disconnect', function () {
+		end = new Date();
+		output.append("Disconnected after " + (end - midpoint) + "ms\n" );
+		output.append("Total Time: "+ (end - start) +"ms\n");
+	});
+
+	socket.connect();
+
+}
+
+function runMessageTest() {
+	var start, end, socket;
+
+	socket = io.connect(":80", {
+		'force new connection': true,
+		'auto connect': false
+	});
+
+	socket.on('connect', function () {
 		start = new Date();
 		socket.emit('1', 1);
 	});
 
-	socket.on('2', function() {
+	socket.on('2', function () {
 		socket.emit('3', "1");
 	});
 
-	socket.on('4', function() {
+	socket.on('4', function () {
 		socket.emit('5', {one:1});
 	});
 
-	socket.on('6', function() {
+	socket.on('6', function () {
 		socket.emit('7', {one:1, two:'2'});
 	});
 
-	socket.on('8', function() {
+	socket.on('8', function () {
 		end = new Date();
 		socket.disconnect();
 	});
 
-	socket.on('disconnect', function() {
+	socket.on('disconnect', function () {
 		var time = end - start;
-		output.append("Time to finish all messages: "+ time +"ms\n");
+		output.append("Time For 8 Messages: "+ time +"ms\n");
 	});
 
-	socket.socket.connect();
+	socket.connect();
 }
